@@ -3,9 +3,14 @@ const express = require('express');
 const conectarDB = require('./config/db');
 const redisClient = require('./config/redisClient');
 const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
+const postImageRoutes = require('./routes/postImageRoutes');
 const app = express();
 
 app.use('/users', userRoutes);
+app.use('/posts', postRoutes);
+app.use('/images', postImageRoutes);
+
 conectarDB();
 redisClient.connect();
 
