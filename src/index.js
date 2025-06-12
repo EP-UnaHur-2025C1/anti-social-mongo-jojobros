@@ -6,12 +6,16 @@ const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const postImageRoutes = require('./routes/postImageRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const tagRoutes = require('./routes/tagRoutes');
+const commentTagRoutes = require('./routes/commentTagRoutes');
 const app = express();
 
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/images', postImageRoutes);
 app.use('/comments', commentRoutes);
+app.use('/tags', tagRoutes);
+app.use('/comment-tags', commentTagRoutes);
 
 conectarDB();
 redisClient.connect();
