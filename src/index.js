@@ -5,11 +5,13 @@ const redisClient = require('./config/redisClient');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const postImageRoutes = require('./routes/postImageRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 const app = express();
 
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/images', postImageRoutes);
+app.use('/comments', commentRoutes);
 
 conectarDB();
 redisClient.connect();
