@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const filterOldComments = require('../middlewares/filterOldComments');
 const {
   getAllComments,
   createComment,
@@ -7,7 +8,7 @@ const {
   deleteComment
 } = require('../controllers/commentController');
 
-router.get('/', getAllComments);
+router.get('/', filterOldComments, getAllComments);
 router.post('/', createComment);
 router.put('/:id', updateComment);
 router.delete('/:id', deleteComment);

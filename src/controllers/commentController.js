@@ -4,8 +4,11 @@ const Comment = require('../models/Comment');
 const getAllComments = async (req, res) => {
   try {
     const comments = await Comment.find().populate('userId').populate('postId');
+
     if (comments.length === 0) return res.status(204).send();
-    res.status(200).json(comments);
+
+    const filtered = res.filterOldComments(comments);
+    res.status(200).json(filtered);
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }

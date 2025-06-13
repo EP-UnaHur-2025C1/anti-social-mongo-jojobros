@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const validatePost = require('../middlewares/validatePost');
 const {
   getPosts,
   createPost,
@@ -10,7 +11,7 @@ const {
 } = require('../controllers/postController');
 
 router.get('/', getPosts);                                  // GET /posts
-router.post('/', createPost);                               // POST /posts
+router.post('/', validatePost, createPost);                 // POST /posts
 router.put('/:id', updatePost);                             // PUT /posts/:id
 router.delete('/:id', deletePost);                          // DELETE /posts/:id
 router.delete('/:id/images/:imageId', deleteImageFromPost); // DELETE /posts/:id/images/:imageId

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const validateUser = require('../middlewares/validateUser');
 const {
   getUsers,
   createUser,
@@ -8,7 +9,7 @@ const {
 } = require('../controllers/userController.js');
 
 router.get('/', getUsers);
-router.post('/', createUser);
+router.post('/', validateUser, createUser);
 router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
 
