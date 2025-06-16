@@ -60,8 +60,8 @@ const deletePost = async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ error: 'Publicación no encontrada' });
 
-    await PostImage.deleteMany({ postId: post._id }); // eliminar imágenes asociadas
-    await post.deleteOne(); // eliminar post
+    await PostImage.deleteMany({ postId: post._id }); // Eliminar imágenes asociadas
+    await post.deleteOne(); // Eliminar post
 
     res.status(200).json({ message: 'Publicación eliminada exitosamente junto con todos sus recursos asociados' });
   } catch (error) {

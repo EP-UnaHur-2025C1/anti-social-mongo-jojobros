@@ -19,7 +19,7 @@ const createComment = async (req, res) => {
   try {
     const { postId, userId, coment, fecha } = req.body;
     if (!postId || !userId || !coment) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios: postId, userId y coment' });
+      return res.status(400).json({ error: 'Faltan campos obligatorios: postId, userId y comment' });
     }
 
     const newComment = new Comment({ postId, userId, coment, fecha });

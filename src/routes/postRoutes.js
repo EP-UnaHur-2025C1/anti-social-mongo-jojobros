@@ -10,11 +10,11 @@ const {
   updateImageInPost
 } = require('../controllers/postController');
 
-router.get('/', getPosts);                                  // GET /posts
-router.post('/', validatePost, createPost);                 // POST /posts
-router.put('/:id', updatePost);                             // PUT /posts/:id
-router.delete('/:id', deletePost);                          // DELETE /posts/:id
-router.delete('/:id/images/:imageId', deleteImageFromPost); // DELETE /posts/:id/images/:imageId
-router.put('/:id/images/:imageId', updateImageInPost);      // PUT /posts/:id/images/:imageId
+router.get('/', getPosts);
+router.post('/', validatePost, createPost);                 
+router.put('/:id', updatePost);                             
+router.delete('/:id', deletePost);                          
+router.delete('/:id/images/:imageId', deleteImageFromPost); 
+router.put('/:id/images/:imageId', updateImageInPost);      
 
 module.exports = router;
