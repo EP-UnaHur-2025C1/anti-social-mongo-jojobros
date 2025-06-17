@@ -19,6 +19,8 @@ app.use('/comments', commentRoutes);
 app.use('/tags', tagRoutes);
 app.use('/comment-tags', commentTagRoutes);
 app.use(errorHandler);
+app.use('/uploads', express.static('uploads'));
+
 
 conectarDB();
 redisClient.connect();

@@ -60,9 +60,34 @@ const deleteImage = async (req, res) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se subió ninguna imagen' });
+    }
+
+    const imagePath = `/uploads/${req.file.filename}`;
+
+    const newImage = new PostImage({ img: imagePath, postId });
+    await newImage.save();
+
+    await Post.findByIdAndUpdate(postId, {
+      $push: { imagenes: newImage._id }
+    });
+
+    res.status(201).json(newImage);
+  } catch (error) {
+    console.error('Error al subir imagen:', error.message);
+    res.status(500).json({ error: 'Error al subir la imagen' });
+  }
+};
+
 module.exports = {
   getAllImages,
   createImage,
   updateImage,
   deleteImage,
+  uploadImage
 };
