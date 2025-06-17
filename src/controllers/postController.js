@@ -29,33 +29,67 @@ const getPosts = async (req, res) => {
   }
 };
 
-// POST /posts
 const createPost = async (req, res) => {
   try {
-    const { userId, content, fecha, imagenes } = req.body;
+    const { userId, content } = req.body;
     if (!userId || !content) {
-      return res.status(400).json({ error: 'Los campos "userId" y "content" son obligatorios' });
+      return res.status(400).json({ error: 'Faltan campos obligatorios: "userId" y "content"' });
     }
 
-    const post = new Post({ userId, content, fecha });
-    await post.save();
+    // Crear el post base
+    const newPost = new Post({ userId, content });
+    await newPost.save();
 
-    if (Array.isArray(imagenes) && imagenes.length > 0) {
-      const nuevasImagenes = await PostImage.insertMany(
-        imagenes.map(img => ({
-          img: img.img,
-          postId: post._id
-        }))
+    // Si hay imágenes, crear PostImage y asociarlas
+    if (req.files && req.files.length > 0) {
+      const imageDocs = await Promise.all(
+        req.files.map(async (file) => {
+          const imgPath = `/uploads/${file.filename}`;
+          const image = new PostImage({ img: imgPath, postId: newPost._id });
+          await image.save();
+          return image._id;
+        })
       );
-      post.imagenes = nuevasImagenes.map(img => img._id);
-      await post.save();
+
+      newPost.imagenes = imageDocs;
+      await newPost.save();
     }
 
-    res.status(201).json(post); // Publicación creada exitosamente
+    res.status(201).json(newPost);
   } catch (error) {
-    res.status(500).json({ error: 'Error al crear la publicación' });
+    console.error('Error al crear el post:', error.message);
+    res.status(500).json({ error: 'Error al crear el post' });
   }
 };
+
+
+// POST /posts (con imagenes en URL)
+// const createPost = async (req, res) => {
+//   try {
+//     const { userId, content, fecha, imagenes } = req.body;
+//     if (!userId || !content) {
+//       return res.status(400).json({ error: 'Los campos "userId" y "content" son obligatorios' });
+//     }
+
+//     const post = new Post({ userId, content, fecha });
+//     await post.save();
+
+//     if (Array.isArray(imagenes) && imagenes.length > 0) {
+//       const nuevasImagenes = await PostImage.insertMany(
+//         imagenes.map(img => ({
+//           img: img.img,
+//           postId: post._id
+//         }))
+//       );
+//       post.imagenes = nuevasImagenes.map(img => img._id);
+//       await post.save();
+//     }
+
+//     res.status(201).json(post); // Publicación creada exitosamente
+//   } catch (error) {
+//     res.status(500).json({ error: 'Error al crear la publicación' });
+//   }
+// };
 
 // PUT /posts/:id
 const updatePost = async (req, res) => {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const validatePost = require('../middlewares/validatePost');
+const upload = require('../middlewares/upload');
 const {
   getPosts,
   createPost,
@@ -11,7 +12,7 @@ const {
 } = require('../controllers/postController');
 
 router.get('/', getPosts);
-router.post('/', validatePost, createPost);                 
+router.post('/', upload.array('imagenes'), validatePost, createPost);                 
 router.put('/:id', updatePost);                             
 router.delete('/:id', deletePost);                          
 router.delete('/:id/images/:imageId', deleteImageFromPost); 
