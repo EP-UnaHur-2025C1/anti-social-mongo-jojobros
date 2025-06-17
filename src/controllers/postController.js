@@ -1,12 +1,29 @@
 const Post = require('../models/Post');
 const PostImage = require('../models/PostImage');
+const redisClient = require('../config/redisClient');
+
 
 // GET /posts
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('imagenes', 'img').populate('userId', 'nickName');
-    if (!posts || posts.length === 0) return res.status(204).send(); // No hay contenido
-    res.status(200).json(posts); // Lista de publicaciones
+    // Verificar si hay cache
+    const cached = await redisClient.get('posts_cache');
+    if (cached) {
+      console.log('Devuelto desde Redis');
+      return res.status(200).json(JSON.parse(cached));
+    }
+
+    // Si no hay cache, consultar Mongo
+    const posts = await Post.find()
+      .populate('imagenes', 'img')
+      .populate('userId', 'nickName');
+
+    if (!posts || posts.length === 0) return res.status(204).send();
+
+    // Guardar en Redis por 180 segundos
+    await redisClient.set('posts_cache', JSON.stringify(posts), { EX: 180 });
+
+    res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
