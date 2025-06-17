@@ -4,7 +4,7 @@ const PostImage = require('../models/PostImage');
 // GET /posts
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('imagenes').populate('userId');
+    const posts = await Post.find().populate('imagenes', 'img').populate('userId', 'nickName');
     if (!posts || posts.length === 0) return res.status(204).send(); // No hay contenido
     res.status(200).json(posts); // Lista de publicaciones
   } catch (error) {
@@ -26,7 +26,7 @@ const createPost = async (req, res) => {
     if (Array.isArray(imagenes) && imagenes.length > 0) {
       const nuevasImagenes = await PostImage.insertMany(
         imagenes.map(img => ({
-          imagenes: img.imagenes,
+          img: img.img,
           postId: post._id
         }))
       );

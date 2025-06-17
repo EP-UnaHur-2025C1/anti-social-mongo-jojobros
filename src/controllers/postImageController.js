@@ -1,4 +1,5 @@
 const PostImage = require('../models/PostImage');
+const Post = require('../models/Post');
 
 // GET /images
 const getAllImages = async (req, res) => {
@@ -14,18 +15,24 @@ const getAllImages = async (req, res) => {
 // POST /images
 const createImage = async (req, res) => {
   try {
-    const { imagenes, postId } = req.body;
-    if (!imagenes || !postId) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios: "imagenes" y "postId"' });
+    const { img, postId } = req.body;
+    if (!img || !postId) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios: "img" y "postId"' });
     }
 
-    const newImage = new PostImage({ imagenes, postId });
-    await newImage.save();
+    const newImage = new PostImage({ img, postId });
+    await newImage.save();  
+
+    // 🔧 Agregamos la imagen al array del Post
+    await Post.findByIdAndUpdate(postId, {
+      $push: { imagenes: newImage._id }
+    });    
 
     res.status(201).json(newImage);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear la imagen' });
-  }
+  }catch (error) {
+  console.error('Detalles del error:', error.message);
+  return res.status(500).json({ error: 'Error al crear la imagen', detalle: error.message });
+} 
 };
 
 // PUT /images/:id

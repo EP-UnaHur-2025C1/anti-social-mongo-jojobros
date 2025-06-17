@@ -3,7 +3,7 @@ const Comment = require('../models/Comment');
 // GET /comments
 const getAllComments = async (req, res) => {
   try {
-    const comments = await Comment.find().populate('userId').populate('postId');
+    const comments = await Comment.find().populate('userId', 'nickName').populate('postId');
 
     if (comments.length === 0) return res.status(204).send();
 
@@ -17,12 +17,12 @@ const getAllComments = async (req, res) => {
 // POST /comments
 const createComment = async (req, res) => {
   try {
-    const { postId, userId, coment, fecha } = req.body;
-    if (!postId || !userId || !coment) {
+    const { postId, userId, comment, fecha } = req.body;
+    if (!postId || !userId || !comment) {
       return res.status(400).json({ error: 'Faltan campos obligatorios: postId, userId y comment' });
     }
 
-    const newComment = new Comment({ postId, userId, coment, fecha });
+    const newComment = new Comment({ postId, userId, comment, fecha });
     await newComment.save();
 
     res.status(201).json(newComment);

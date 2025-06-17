@@ -11,6 +11,7 @@ const commentTagRoutes = require('./routes/commentTagRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 
+app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/images', postImageRoutes);
