@@ -23,7 +23,7 @@ const removeTagFromPost = async (req, res) => {
     const { postId, tagId } = req.body;
     const deleted = await CommentTag.findOneAndDelete({ postId, tagId });
     if (!deleted) return res.status(404).json({ error: 'Relación no encontrada' });
-    res.status(204).send();
+    res.status(200).json({ message: 'Relación eliminada correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar la relación' });
   }

@@ -37,7 +37,11 @@ const updateUser = async (req, res) => {
     }
     res.status(201).json(updated); // Usuario actualizado exitosamente
   } catch (error) {
-    res.status(400).json({ error: 'Solicitud incorrecta' });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: 'Solicitud incorrecta' });
+    }
+    console.error('Error al actualizar usuario:', error.message);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -48,7 +52,7 @@ const deleteUser = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    res.status(204).send(); // Usuario eliminado exitosamente (sin contenido)
+    res.status(200).json({ message: 'Usuario eliminado correctamente' }); // Usuario eliminado exitosamente (sin contenido)
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
