@@ -54,9 +54,72 @@ const deleteUser = async (req, res) => {
   }
 };
 
+//Followers
+const followUser = async (req, res) => {
+  const { id } = req.params; // ID del usuario a seguir
+  const { followerId } = req.body; // ID del que sigue
+
+  if (id === followerId) {
+    return res.status(400).json({ error: 'No puedes seguirte a vos mismo' });
+  }
+
+  try {
+    await User.findByIdAndUpdate(followerId, { $addToSet: { following: id } });
+    await User.findByIdAndUpdate(id, { $addToSet: { followers: followerId } });
+
+    res.status(200).json({ message: 'Usuario seguido exitosamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al seguir al usuario' });
+  }
+};
+
+const unfollowUser = async (req, res) => {
+  const { id } = req.params; // ID del usuario a dejar de seguir
+  const { followerId } = req.body; // ID del que deja de seguir
+
+  try {
+    await User.findByIdAndUpdate(followerId, { $pull: { following: id } });
+    await User.findByIdAndUpdate(id, { $pull: { followers: followerId } });
+
+    res.status(200).json({ message: 'Usuario dejado de seguir correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al dejar de seguir al usuario' });
+  }
+};
+
+const getFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate('followers', '_id nickName');
+
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    res.status(200).json(user.followers);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los seguidores' });
+  }
+};
+
+const getFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate('following', '_id nickName');
+
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    res.status(200).json(user.following);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los seguidos' });
+  }
+};
+
 module.exports = {
   getUsers,
   createUser,
   updateUser,
   deleteUser,
+  followUser,
+  unfollowUser,
+  getFollowers,
+  getFollowing
 };
