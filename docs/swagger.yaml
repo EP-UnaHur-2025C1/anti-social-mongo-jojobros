@@ -1,0 +1,589 @@
+openapi: 3.0.0
+info:
+  title: API Anti-Social Mongo
+  version: 1.0.0
+  description: Documentación de la API del proyecto Anti-Social Mongo
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Users
+    description: Gestión de usuarios
+  - name: Posts
+    description: Publicaciones de usuarios
+  - name: Comments
+    description: Comentarios sobre posts
+  - name: Tags
+    description: Etiquetas y relaciones con comentarios
+
+paths:
+  /users:
+    get:
+      tags: [Users]
+      summary: Obtener todos los usuarios
+      responses:
+        200:
+          description: Lista de usuarios
+        204:
+          description: No hay usuarios
+        500:
+          description: Error interno del servidor
+    post:
+      tags: [Users]
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioInput'
+      responses:
+        201:
+          description: Usuario creado exitosamente
+        400:
+          description: Datos inválidos
+        500:
+          description: Error interno del servidor
+
+  /users/{id}:
+    put:
+      tags: [Users]
+      summary: Actualizar usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioInput'
+      responses:
+        201:
+          description: Usuario actualizado exitosamente
+        400:
+          description: Solicitud incorrecta
+        404:
+          description: Usuario no encontrado
+        500:
+          description: Error interno del servidor
+    delete:
+      tags: [Users]
+      summary: Eliminar usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Usuario eliminado correctamente
+        404:
+          description: Usuario no encontrado
+        500:
+          description: Error interno del servidor
+
+
+  /posts:
+    get:
+      tags: [Posts]
+      summary: Obtener todos los posts
+      responses:
+        200:
+          description: Lista de publicaciones
+        204:
+          description: No hay publicaciones
+        500:
+          description: Error interno del servidor
+    post:
+      tags: [Posts]
+      summary: Crear un post con imágenes
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                content:
+                  type: string
+                imagenes:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        201:
+          description: Publicación creada exitosamente
+        400:
+          description: Campos obligatorios faltantes
+        500:
+          description: Error interno del servidor
+
+  /posts/{id}:
+    put:
+      tags: [Posts]
+      summary: Actualizar una publicación
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        201:
+          description: Publicación actualizada exitosamente
+        400:
+          description: Solicitud incorrecta
+        404:
+          description: Publicación no encontrada
+        500:
+          description: Error interno del servidor
+    delete:
+      tags: [Posts]
+      summary: Eliminar una publicación y sus recursos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Publicación eliminada correctamente
+        404:
+          description: Publicación no encontrada
+        500:
+          description: Error interno del servidor
+
+  /comments:
+    get:
+      tags: [Comments]
+      summary: Listar todos los comentarios
+      responses:
+        200:
+          description: Lista de comentarios
+        204:
+          description: No hay comentarios
+        500:
+          description: Error interno del servidor
+    post:
+      tags: [Comments]
+      summary: Crear comentario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComentarioInput'
+      responses:
+        201:
+          description: Comentario creado exitosamente
+        400:
+          description: Datos inválidos
+        500:
+          description: Error interno del servidor
+
+  /comments/{id}:
+    put:
+      tags: [Comments]
+      summary: Editar comentario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComentarioInput'
+      responses:
+        201:
+          description: Comentario actualizado
+        404:
+          description: Comentario no encontrado
+        500:
+          description: Error interno del servidor
+    delete:
+      tags: [Comments]
+      summary: Eliminar comentario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Comentario eliminado correctamente
+        404:
+          description: Comentario no encontrado
+        500:
+          description: Error interno del servidor
+
+
+  /tags:
+    get:
+      tags: [Tags]
+      summary: Obtener todas las etiquetas
+      responses:
+        200:
+          description: Lista de etiquetas
+        204:
+          description: No hay etiquetas
+        500:
+          description: Error interno del servidor
+    post:
+      tags: [Tags]
+      summary: Crear una nueva etiqueta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagInput'
+      responses:
+        201:
+          description: Etiqueta creada exitosamente
+        400:
+          description: Datos inválidos
+        500:
+          description: Error interno del servidor
+
+  /tags/{id}:
+    put:
+      tags: [Tags]
+      summary: Actualizar etiqueta
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagInput'
+      responses:
+        201:
+          description: Etiqueta actualizada exitosamente
+        404:
+          description: Etiqueta no encontrada
+        500:
+          description: Error interno del servidor
+    delete:
+      tags: [Tags]
+      summary: Eliminar etiqueta
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Etiqueta eliminada correctamente
+        404:
+          description: Etiqueta no encontrada
+        500:
+          description: Error interno del servidor
+
+  /comment-tags:
+    post:
+      tags: [Comment-Tags]
+      summary: Asociar un tag a un comentario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentTagInput'
+      responses:
+        201:
+          description: Relación creada exitosamente
+        400:
+          description: Datos faltantes
+        500:
+          description: Error interno del servidor
+    delete:
+      tags: [Comment-Tags]
+      summary: Eliminar un tag de un comentario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentTagInput'
+      responses:
+        200:
+          description: Relación eliminada correctamente
+        500:
+          description: Error interno del servidor
+
+  /comment-tags/post/{postId}:
+    get:
+      tags: [Comment-Tags]
+      summary: Obtener todos los tags de un post
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Lista de tags del post
+        404:
+          description: Post no encontrado
+        500:
+          description: Error interno del servidor
+
+  /users/{id}/follow:
+    post:
+      tags: [Users]
+      summary: Seguir a un usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerId:
+                  type: string
+      responses:
+        200:
+          description: Usuario seguido exitosamente
+        400:
+          description: No puedes seguirte a vos mismo
+        500:
+          description: Error al seguir al usuario
+
+  /users/{id}/unfollow:
+    delete:
+      tags: [Users]
+      summary: Dejar de seguir a un usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerId:
+                  type: string
+      responses:
+        200:
+          description: Usuario dejado de seguir correctamente
+        500:
+          description: Error al dejar de seguir al usuario
+
+  /users/{id}/followers:
+    get:
+      tags: [Users]
+      summary: Obtener los seguidores de un usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Lista de seguidores
+        404:
+          description: Usuario no encontrado
+        500:
+          description: Error interno del servidor
+
+  /users/{id}/following:
+    get:
+      tags: [Users]
+      summary: Obtener a quién sigue un usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Lista de seguidos
+        404:
+          description: Usuario no encontrado
+        500:
+          description: Error interno del servidor
+
+  /posts/{id}/images/{imageId}:
+    delete:
+      tags: [Posts]
+      summary: Eliminar una imagen específica de un post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Imagen eliminada exitosamente
+        404:
+          description: Imagen no encontrada
+        500:
+          description: Error al eliminar la imagen
+
+    put:
+      tags: [Posts]
+      summary: Actualizar una publicación con imágenes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+      responses:
+        200:
+          description: Imagen actualizada exitosamente
+        404:
+          description: Publicación o imagen no encontrada
+        500:
+          description: Error interno del servidor
+
+components:
+  schemas:
+
+    Usuario:
+      type: object
+      required:
+        - nickName
+        - email
+      properties:
+        _id:
+          type: string
+        nickName:
+          type: string
+        email:
+          type: string
+        followers:
+          type: array
+          items:
+            type: string
+        following:
+          type: array
+          items:
+            type: string
+
+    Post:
+      type: object
+      required:
+        - userId
+        - content
+      properties:
+        _id:
+          type: string
+        userId:
+          $ref: '#/components/schemas/Usuario'
+        content:
+          type: string
+        fecha:
+          type: string
+          format: date-time
+        imagenes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Imagen'
+
+    Imagen:
+      type: object
+      properties:
+        _id:
+          type: string
+        img:
+          type: string
+        postId:
+          type: string
+
+    Comentario:
+      type: object
+      required:
+        - contenido
+        - postId
+        - userId
+      properties:
+        _id:
+          type: string
+        contenido:
+          type: string
+        postId:
+          type: string
+        userId:
+          type: string
+
+    Tag:
+      type: object
+      required:
+        - nombre
+      properties:
+        _id:
+          type: string
+        nombre:
+          type: string
+
+
+    CommentTag:
+      type: object
+      required:
+        - commentId
+        - tagId
+      properties:
+        commentId:
+          type: string
+        tagId:
+          type: string
