@@ -1,86 +1,95 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/NImNxoFn)
-# UnaHur - Red Anti-Social
+# 🧠 Anti-Social Network – MongoDB Edition
 
-Se solicita el modelado y desarrollo de un sistema backend para una red social llamada **“UnaHur Anti-Social Net”**, inspirada en plataformas populares que permiten a los usuarios realizar publicaciones y recibir comentarios sobre las mismas.
+Aplicación de red social minimalista con persistencia en MongoDB, Redis y soporte para carga de imágenes.
 
-![Imagen](./assets/ANTI-SOCIALNET.jpeg)
+---
 
-# Contexto del Proyecto
+## 🚀 Tecnologías
 
-En una primera reunión con los sponsors del proyecto, se definieron los siguientes requerimientos para el desarrollo de un **MVP (Producto Mínimo Viable)**:
+- Node.js + Express
+- MongoDB + Mongoose
+- Redis (caching)
+- Swagger (documentación de API)
+- Multer (carga de imágenes)
+- Docker + Docker Compose
 
-- El sistema debe permitir que un usuario registrado realice una publicación (post), incluyendo **obligatoriamente una descripción**. De forma opcional, se podrán asociar **una o más imágenes** a dicha publicación.
+---
 
-- Las publicaciones pueden recibir **comentarios** por parte de otros usuarios.
+## ⚙️ Instalación
 
-- Las publicaciones pueden estar asociadas a **etiquetas (tags)**. Una misma etiqueta puede estar vinculada a múltiples publicaciones.
+```bash
+git clone https://github.com/tu-usuario/anti-social-mongo-jojobros.git
+cd anti-social-mongo-jojobros
+npm install
+```
 
-- Es importante que los **comentarios más antiguos que X meses** (valor configurable mediante variables de entorno, por ejemplo, 6 meses) **no se muestren** en la visualización de los posteos.
+🔧 Crear un archivo `.env` con:
 
-####
+```
+PORT=3000
+MONGO_URI=mongodb://admin:admin123@localhost:27017/miBase?authSource=admin
+REDIS_URL=redis://localhost:6379
+```
 
-# Entidades y Reglas de Negocio
+🐳 Iniciar contenedores:
 
-Los sponsors definieron los siguientes nombres y descripciones para las entidades:
+```bash
+docker compose up -d
+```
 
-- **User**: Representa a los usuarios registrados en el sistema. El campo `nickName` debe ser **único** y funcionará como identificador principal del usuario.
+🟢 Iniciar el servidor:
 
-- **Post**: Publicación realizada por un usuario en una fecha determinada que contiene el texto que desea publicar. Puede tener **cero o más imágenes** asociadas. Debe contemplarse la posibilidad de **agregar o eliminar imágenes** posteriormente.
+```bash
+npm run dev
+```
 
-- **Post_Images**: Entidad que registra las imágenes asociadas a los posts. Para el MVP, solo se requiere almacenar la **URL de la imagen alojada**.
+---
 
-- **Comment**: Comentario que un usuario puede realizar sobre una publicación. Incluye la fecha en la que fue realizado y una indicación de si está **visible o no**, dependiendo de la configuración (X meses).
+## 🧪 Pruebas
 
-- **Tag**: Etiqueta que puede ser asignada a un post. Una etiqueta puede estar asociada a **muchos posts**, y un post puede tener **múltiples etiquetas**.
+Recomendamos usar [Postman](https://www.postman.com/) para probar los endpoints.
 
-# Requerimientos Técnicos
+Importar la colección `postman_collection.json`.
 
-1. **Modelado de Datos**
+---
 
-   - Diseñar el modelo documental que represtente todas las entidades definidas por los sponsor del proyecto. Queda a su criterio si usan relaciones embebidas o relaciones referenciadas a otros documentos.
+## 📂 Estructura del proyecto
 
-### Ejemplo referenciadas
+```
+├── src
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middlewares/
+│   ├── config/
+│   ├── uploads/       
+│   └── index.js
+├── .env
+├── docker-compose.yml
+├── README.md
+└── swagger.yaml       
+```
 
-![referenciadas](./assets/Referenciada.png)
+---
 
-2. **Desarrollo del Backend**
+## 📚 Documentación
 
-   - Crear los **endpoints CRUD** necesarios para cada entidad.
+Accedé a la documentación Swagger desde:
 
-   - Implementar las rutas necesarias para gestionar las relaciones entre entidades (por ejemplo: asociar imágenes a un post, etiquetas a una publicación, etc.).
+```
+http://localhost:3000/api-docs
+```
 
-   - Desarrollar las validaciones necesarias para asegurar la integridad de los datos (schemas, validaciones de integridad referencial).
+---
 
-   - Desarrollar las funciones controladoras con una única responsabiliad evitando realizar comprobaciones innecesarias en esta parte del código.
+## 🧊 Cache con Redis
 
-3. **Configuración y Portabilidad**
+La ruta `GET /posts` implementa caching con una duración de 3 minutos.
 
-   - El sistema debe poder cambiar de **base de datos** de forma transparente, utilizando configuración e instalación de dependencias adecuadas.
+---
 
-   - El sistema debe permitir configurar el **puerto de ejecución y variables de entorno** fácilmente.
+## 📌 Bonus Implementados
 
-4. **Documentación**
-
-   - Generar la documentación de la API utilizando **Swagger (formato YAML)**, incluyendo todos los endpoints definidos.
-
-5. **Colecciones de Prueba**
-
-   - Entregar las colecciones necesarias para realizar pruebas (por ejemplo, colecciones de Postman o archivos JSON de ejemplo).
-
-###
-
-# Recomendaciones y ayudas
-
-Les entregamos este link que apunta a un front-end ya desarrollado para que puedan investigarlo y puedan crear el back-end que se ajuste lo maximo posiblel funcionamiento del front.
-
-[https://unahur.vmdigitai.com/redes-front/users](https://unahur.vmdigitai.com/redes-front/users)
-
-Por otro lado les dejamos la documentació de los endpoint para que también la puedan revisar y armar siguiendo este link
-
-[https://unahur.vmdigitai.com/swagger/](https://unahur.vmdigitai.com/swagger/)
-
-# Bonus
-
-- Hace el upload de las imganes que se asocian a un POST que lo guarden en una carpeta de imagenes dentro del servidor web.
-- ¿Cómo modelarías que un usuario pueda "seguir" a otros usuarios, y a su vez ser seguido por muchos? Followers
-- Con la información de los post no varia muy seguido que estrategias podrian utilizar la que la información no sea constantemente consultada desde la base de datos.
+- [x] Almacenamiento local de imágenes
+- [x] Cache con Redis
+- [x] Modelo Followers
