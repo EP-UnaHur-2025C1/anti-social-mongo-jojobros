@@ -23,14 +23,6 @@ cd anti-social-mongo-jojobros
 npm install
 ```
 
-🔧 Crear un archivo `.env` con:
-
-```
-PORT=3000
-MONGO_URI=mongodb://admin:admin123@localhost:27017/miBase?authSource=admin
-REDIS_URL=redis://localhost:6379
-```
-
 🐳 Iniciar contenedores:
 
 ```bash
