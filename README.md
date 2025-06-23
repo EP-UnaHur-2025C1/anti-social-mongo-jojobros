@@ -55,10 +55,10 @@ Importar la colección `AntiSocial MongoDB.postman_collection.json`.
 ## Estructura del proyecto
 
 ```
-├── assets
-├── coleccionesPostman
+├── assets/
+├── coleccionesPostman/
 │   └── AntiSocial MongoDB.postman_collection.json
-├── docs
+├── docs/
 │   └── swagger.yaml
 ├── src
 │   ├── config/
